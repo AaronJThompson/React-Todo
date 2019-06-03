@@ -1,6 +1,7 @@
 import React from 'react';
 import TodoList from './components/TodoComponents/TodoList';
 import TodoForm from './components/TodoComponents/TodoForm';
+import SearchBar from './components/TodoComponents/SearchBar';
 let initialData = [
   {
     task: 'Organize Garage',
@@ -26,6 +27,7 @@ class App extends React.Component {
     this.state = {
       todos: initialData,
       todoInput: "",
+      searchString: "",
     }
   }
 
@@ -36,13 +38,15 @@ class App extends React.Component {
     appStorage.setItem("todos", JSON.stringify(this.state.todos));
   }
   addTodo = (e) => {
-    this.setState({ todos: this.state.todos.concat({
-        task: this.state.todoInput,
-        id:Date.now(),
-        completed: false,
+    if (this.state.todoInput){
+      this.setState({ todos: this.state.todos.concat({
+          task: this.state.todoInput,
+          id:Date.now(),
+          completed: false,
+        })
       })
-    })
-    this.setState({todoInput: ""});
+      this.setState({todoInput: ""});
+    }
   }
 
   completeTask = (e) => {
@@ -71,13 +75,22 @@ class App extends React.Component {
     }
 
   }
+
+  onSearchBarChange = (e) => {
+    this.setState({ searchString: e.target.value });
+  }
   
   render() {
     this.saveTodos();
     return (
-      <div>
+      <div className="todo-app">
+        <SearchBar
+          value={this.state.searchString}
+          searchChange={this.onSearchBarChange}
+        />
         <TodoList
           todoList={this.state.todos}
+          searchString ={this.state.searchString}
           completeTask={this.completeTask}
         />
         <TodoForm

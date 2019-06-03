@@ -4,9 +4,10 @@ class TodoList extends React.Component {
 
     render() {
         return(
-            <div>
+            <div className="todo-list">
                 {
-                    this.props.todoList.map((todo) => {
+                    this.props.todoList.filter((todo) => todo.task.toLowerCase().search(this.props.searchString.toLowerCase()) !== -1)
+                    .map((todo) => {
                         return (<Todo
                             key={todo.id}
                             id={todo.id}
